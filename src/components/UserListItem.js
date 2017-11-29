@@ -6,7 +6,7 @@ export default class UserListItem extends Component {
 
     this.state = {
       requestFailed: false,
-      userData: {}
+      userImage: ''
     }
   }
 
@@ -18,15 +18,15 @@ export default class UserListItem extends Component {
     fetch(this.getUrl(this.props.user))
       .then((res) => {
         if (!res.ok) {
-          return new Error('Network request failed for:', this.getUrl(this.props.user));
+          throw new Error(`Response status ${res.status} for: ${this.getUrl(this.props.user)}`);
         }
-        return res;
+        return res.json();
       })
-      .then((res) => res.json())
       .then((res) => {
-        const newUserData = { imageUrl: res.avatar_url };
-        this.setState({ userData: newUserData });
-      }, () => {
+        this.setState({ userImage: res.avatar_url });
+      })
+      .catch((err) => {
+        console.error(err);
         this.setState({ requestFailed: true });
       });
   }
@@ -36,15 +36,15 @@ export default class UserListItem extends Component {
       case this.state.requestFailed:
         return 'Request failed';
 
-      case Object.keys(this.state.userData).length === 0:
+      case this.state.userImage === '':
         return '...Loading';
 
-      case Object.keys(this.state.userData).length > 0:
+      case this.state.userImage !== '':
         return (
-          <img src={`${this.state.userData.imageUrl}`}
+          <img src={`${this.state.userImage}`}
             width="200"
             heigth="200"
-            alt="avatar" />
+            alt="" />
         );
 
       default:
