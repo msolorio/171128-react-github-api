@@ -21,8 +21,11 @@ class App extends Component {
   }
 
   renderUserList() {
-    return this.state.userList.map((user) => {
-      return <UserListItem user={user} />;
+    return this.state.userList.map((user, index) => {
+      return (
+        <UserListItem user={user}
+        key={index} />
+      );
     });
   }
 
