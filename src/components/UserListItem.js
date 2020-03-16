@@ -6,7 +6,11 @@ export default class UserListItem extends Component {
 
     this.state = {
       requestFailed: false,
-      userImage: ''
+      userImage: '',
+      login: '',
+      bio: '',
+      location: '',
+      numOfRepos: 0
     }
   }
 
@@ -23,7 +27,13 @@ export default class UserListItem extends Component {
         return res.json();
       })
       .then((res) => {
-        this.setState({ userImage: res.avatar_url });
+        this.setState({
+          userImage: res.avatar_url,
+          login: res.login,
+          bio: res.bio,
+          location: res.location,
+          numOfRepos: res.public_repos
+        });
       })
       .catch((err) => {
         console.error(err);
@@ -41,10 +51,16 @@ export default class UserListItem extends Component {
 
       case this.state.userImage !== '':
         return (
-          <img src={`${this.state.userImage}`}
-            width="200"
-            heigth="200"
-            alt="" />
+          <div>
+            <h3>{this.state.login}</h3>
+            <p>Bio: {this.state.bio}</p>
+            <p>Locaiton: {this.state.location}</p>
+            <p>Number of Repos: {this.state.numOfRepos}</p>
+            <img src={`${this.state.userImage}`}
+              width="200"
+              heigth="200"
+              alt="" />
+          </div>
         );
 
       default:
